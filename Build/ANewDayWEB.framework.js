@@ -108,8 +108,9 @@ var Module=typeof unityFramework!="undefined"?unityFramework:{};var readyPromise
               deviceId: {
                   exact: videoInputDevices[deviceId].deviceId
               },
-              width: {  min: 1280, ideal: 1280, max: 1920 },
-              height: { min: 720, ideal: 720, max: 1080 },
+              width: { ideal: 1920},
+              height: { ideal: 1080},
+              facingMode: "environment"
       } : true
   })
           .then(stream => {
@@ -118,8 +119,7 @@ var Module=typeof unityFramework!="undefined"?unityFramework:{};var readyPromise
               this.video.srcObject = stream;
               this.video.addEventListener('loadedmetadata', () => {
                   this.video.play();
-                  this.video.width = this.video.videoWidth;
-                  this.video.height = this.video.videoHeight;
+                  
                   resolve();
               });
           });
@@ -259,13 +259,13 @@ Module["MindARImage"] = {
 
   mindFilePath: null, 
 
-  filterMinCF: 0.001, 
+  filterMinCF: 0.0001, 
 
   filterBeta: 0.001,
 
-  missTolerance: 5, // number of miss before considered target lost. default is 5
+  missTolerance: 20, // number of miss before considered target lost. default is 5
   
-  warmupTolerance: 5, // number of track before considered target found. default is 5
+  warmupTolerance: 7, // number of track before considered target found. default is 5
 
   SetMindFilePath: function(mindFilePath) {
     this.mindFilePath = mindFilePath;
@@ -344,9 +344,17 @@ Module["MindARImage"] = {
   StartVideo: function () {
     //navigator.mediaDevices.getUserMedia({audio: false, video: {facingMode: FacingModes[this.facingMode]}})
     return new Promise((resolve) => {
-      navigator.mediaDevices.getUserMedia({audio: false, video: {
-        facingMode: (this.isFacingUser ? 'user' : 'environment')
-      }})
+      navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: videoInputDevices[deviceId].deviceId ? {
+            deviceId: {
+                exact: videoInputDevices[deviceId].deviceId
+            },
+            width: { ideal: 1920},
+            height: { ideal: 1080},
+            facingMode: "environment"
+    } : true
+})
         .then(stream => {
             this.video = document.createElement('video');
             this.video.playsInline = true;
