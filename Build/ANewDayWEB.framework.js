@@ -19,9 +19,9 @@ var Module=typeof unityFramework!="undefined"?unityFramework:{};var readyPromise
 
     isRunning: false,
 
-    filterMinCF: 0.001, 
+    filterMinCF: 0.0001, 
 
-    filterBeta: 10,
+    filterBeta: 0.001,
 
     controller: null,
 
@@ -102,9 +102,16 @@ var Module=typeof unityFramework!="undefined"?unityFramework:{};var readyPromise
     StartVideo: function () {
       //navigator.mediaDevices.getUserMedia({audio: false, video: {facingMode: FacingModes[this.facingMode]}})
       return new Promise((resolve) => {
-        navigator.mediaDevices.getUserMedia({audio: false, video: {
-          facingMode: (this.isFacingUser ? 'user' : 'environment')
-        }})
+        navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: videoInputDevices[deviceId].deviceId ? {
+              deviceId: {
+                  exact: videoInputDevices[deviceId].deviceId
+              },
+              width: {  min: 1280, ideal: 1280, max: 1920 },
+              height: { min: 720, ideal: 720, max: 1080 },
+      } : true
+  })
           .then(stream => {
               this.video = document.createElement('video');
               this.video.playsInline = true;
