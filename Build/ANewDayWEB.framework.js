@@ -104,14 +104,11 @@ var Module=typeof unityFramework!="undefined"?unityFramework:{};var readyPromise
       return new Promise((resolve) => {
         navigator.mediaDevices.getUserMedia({
           audio: false,
-          video: videoInputDevices[deviceId].deviceId ? {
-              deviceId: {
-                  exact: videoInputDevices[deviceId].deviceId
-              },
+          video: {
               width: { ideal: 1920},
               height: { ideal: 1080},
               facingMode: "environment"
-      } : true
+      }
   })
           .then(stream => {
               this.video = document.createElement('video');
@@ -346,14 +343,11 @@ Module["MindARImage"] = {
     return new Promise((resolve) => {
       navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: videoInputDevices[deviceId].deviceId ? {
-            deviceId: {
-                exact: videoInputDevices[deviceId].deviceId
-            },
-            width: { ideal: 1920},
-            height: { ideal: 1080},
-            facingMode: "environment"
-    } : true
+        video:  {
+          width: { ideal: 1920},
+          height: { ideal: 1080},
+          facingMode: "environment"
+  }
 })
         .then(stream => {
             this.video = document.createElement('video');
